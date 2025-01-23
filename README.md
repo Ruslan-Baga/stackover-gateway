@@ -1,1 +1,1 @@
-# StackOver-GateWay
+# StackoverKata-GateWay
