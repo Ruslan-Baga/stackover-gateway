@@ -6,13 +6,16 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import stackover.gateway.service.enums.ServiceLocation;
 import stackover.gateway.service.util.AuthenticationFilter;
-
 @Configuration
 public class RouterConfig {
 
     @Bean
     public RouteLocator commonRouteLocator(RouteLocatorBuilder builder, AuthenticationFilter authenticationFilter) {
         return builder.routes()
+                .route("auth-refresh", r -> r.path("/api/auth/refresh")
+                        .filters(a -> a.addRequestHeader("From-Gateway", "true"))
+                        .uri(ServiceLocation.STACKOVER_AUTH_SERVICE.getUri())
+                )
                 .route("auth-mapping",
                         route -> route
                                 .path("/api/auth/**")
@@ -20,7 +23,7 @@ public class RouterConfig {
 
                 )
                 .route("auth-service", r -> r.path("/api/internal/account/**")
-                        .filters(f -> f.filter(authenticationFilter))
+                        .filters(f -> f.filter(authenticationFilter).addRequestHeader("From-Gateway", "true"))
                         .uri(ServiceLocation.STACKOVER_AUTH_SERVICE.getUri())
                 )
 
