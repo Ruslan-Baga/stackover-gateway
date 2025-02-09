@@ -26,6 +26,17 @@ public class RouterConfig {
                         .filters(f -> f.filter(authenticationFilter).addRequestHeader("From-Gateway", "true"))
                         .uri(ServiceLocation.STACKOVER_AUTH_SERVICE.getUri())
                 )
+                .route("profile-service", r -> r.path("/api/profile/**", "/api/inner/profile/**")
+                        .filters(f -> f.filter(authenticationFilter))
+                        .uri(ServiceLocation.STACKOVER_PROFILE_SERVICE.getUri())
+                )
+                .route("resource-service", r -> r.path("/api/user/question/**")
+                        .filters(f -> f.filter(authenticationFilter))
+                        .uri(ServiceLocation.STACKOVER_RESOURCE_SERVICE.getUri())
+                )
+                .route("eureka-server", r -> r.path("/eureka/**")
+                        .uri(ServiceLocation.STACKOVER_EUREKA_SERVICE.getUri())
+                )
 
                 .build();
     }
